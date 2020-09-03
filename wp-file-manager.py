@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#
+# -*- coding: utf-8 -*-
 # 
 # File Manager < 6.9 - Arbitrary File Upload leading to RCE
 # 
