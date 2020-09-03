@@ -1,5 +1,5 @@
 # wp-file-manager
-File Manager < 6.9 - Arbitrary File Upload leading to RCE
+WP File Manager < 6.9 - Arbitrary File Upload leading to RCE
 
 ```
 usage: wp-file-manager.py [-h] [-u URL] [-f FILE]
